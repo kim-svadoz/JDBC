@@ -4,11 +4,15 @@ import java.util.ArrayList;
 
 public class ArrayListTest03 {
 	public static void main(String[] args) {
-		String[] arr = {"java","oracle","jdbc","html5","css"};
+		String[] arr = {"java","oracle","jdbc","html5","css", "java"};
 		ArrayList<String> list = changeData(arr);
 		//변환되어 리턴된 ArrayList에저장된 값을 꺼내서 출력하기
-		for (int i = 0; i < list.size(); i++) {
-			System.out.println(list.get(i));
+		int size = list.size(); // web에서는 size를 미리 받아놓고 작업하는 것이 성능UP!
+		for (int i = 0; i < size; i++) {
+			System.out.println("요소:"+list.get(i));
+		} 
+		for (String data : list) {
+			System.out.println("요소:"+data);
 		}
 	}
 	//배열을 ArrayList로 변환해서 리턴하는 메소드

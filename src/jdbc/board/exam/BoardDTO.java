@@ -20,6 +20,13 @@ public class BoardDTO {
 		this.title = title;
 		Content = content;
 	}
+	
+	public BoardDTO(String title) {
+		super();
+		this.title = title;
+	}
+	
+	
 
 	// select ¿ëµµ
 	public BoardDTO(int boardNum, String id, String title, String content, Date writeDate, int hit) {

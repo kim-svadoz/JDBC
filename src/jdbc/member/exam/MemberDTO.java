@@ -1,4 +1,4 @@
-package jdbc.board.exam;
+package jdbc.member.exam;
 
 import java.sql.Date;
 
@@ -13,6 +13,12 @@ public class MemberDTO {
 	public MemberDTO() {
 		
 	}
+	
+	/*public MemberDTO(String id, String pass) {
+		super();
+		this.id = id;
+		this.pass = pass;
+	}*/
 	
 	public MemberDTO
 	(String id, String pass, String name, String addr, String deptno) {

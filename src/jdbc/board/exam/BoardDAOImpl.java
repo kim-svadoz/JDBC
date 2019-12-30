@@ -1,10 +1,10 @@
 package jdbc.board.exam;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 //tb_board테이블을 액세스하는 기능이 정의된 클래스
 public class BoardDAOImpl implements BoardDAO {
@@ -73,46 +73,83 @@ public class BoardDAOImpl implements BoardDAO {
 		return result;
 	}
 	
-	/*public void Search(String title) {
+	public ArrayList<BoardDTO> findByTitle(String title) {
+		ArrayList<BoardDTO> boardlist = new ArrayList<BoardDTO>();
+		BoardDTO board = null;
 		Connection con = null;
 		PreparedStatement ptmt = null;
 		ResultSet rs = null;
-		String sql = "delete tb_board where boardnum = ?";
+		String sql = "select * from tb_board where title like ?";
 		try {
 			con = DBUtil.getConnect();
 			ptmt = con.prepareStatement(sql);
-			int result = ptmt.executeUpdate();
-			rs = ptmt.executeQuery(sql);
-			System.out.println(result + "개 행 Search 성공! ");
+			ptmt.setString(1, "%" + title + "%");
+			rs = ptmt.executeQuery();
+			while (rs.next()) {
+				board = new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5),
+						rs.getInt(6));
+				boardlist.add(board);
+			}
+			System.out.println(rs + "개 행 findbytitle 성공! ");
 		} catch (SQLException e) {
 			System.out.println("DBMS 연결 실패" + e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, ptmt, con);
 		}
-		return result;
-	}*/
+		return boardlist;
+	}
 	
-	public void Select() {
+	public BoardDTO read(int boardnum) {
+		BoardDTO board = null;
+		Connection con = null;
+		PreparedStatement ptmt = null;
+		ResultSet rs = null;
+		String sql = "select * from tb_board where boardnum = ? ";
+		try {
+			con = DBUtil.getConnect();
+			ptmt = con.prepareStatement(sql);
+			ptmt.setInt(1, boardnum);
+			//result = ptmt.executeUpdate();
+			rs = ptmt.executeQuery();
+			if(rs.next()) {
+				board = new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3),
+						rs.getString(4), rs.getDate(5), rs.getInt(6)); 
+				// PK로 정의했기 때문에 결과가 하나다. => while로 할 필요없고 if로 할 수 있다.
+			}
+		} catch (SQLException e) {
+			System.out.println("DBMS 연결 실패" + e.getMessage());
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs, ptmt, con);
+		}
+		return board;
+	}
+	
+	//조회한 결과를 ArrayList로 변환하여 리턴
+	public ArrayList<BoardDTO> Select() {
+		//전체 게시글을 담을 Collection
+		ArrayList<BoardDTO> boardlist = new ArrayList<BoardDTO>();
+		//조회한 게시글을 담을 객체
+		//객체를 생성하지 않고 null로 초기화하는 이유
+		//=> 데이터를 조회한는 작업을 하는 곳이 while문 내부이므로 while문에서 조회된 레코드로 객체를 생성
+		BoardDTO board = null;
 		Connection con = null;
 		PreparedStatement ptmt = null;
 		ResultSet rs = null;
 		String sql = "select * from tb_board";
-
 		try {
 			con = DBUtil.getConnect();
 			ptmt = con.prepareStatement(sql);
 			int result = ptmt.executeUpdate();
 			rs = ptmt.executeQuery(sql);
 			while (rs.next()) { // 레코드를 조회하기 위해서는 레코드가 한 개라도 반드시 커서를 이동시켜야 한다.
-				System.out.print(rs.getInt(1) + "\t");
-				System.out.print(rs.getString(2) + "\t");
-				System.out.print(rs.getString(3) + "\t");
-				System.out.print(rs.getString("content") + "\t");
-				System.out.print(rs.getDate(5) + "\t");
-				System.out.println(rs.getInt(6) + "\t");
+				//1. 조회된 레코드의 컬럼을 읽어서 DTO로 변환하는 작업
+				board = new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3),
+						rs.getString(4), rs.getDate(5), rs.getInt(6));
+				//2. DTO로 변환된 레코드를 Arraylist 에 추가
+				boardlist.add(board);
 			}
-
 			System.out.println(result + "개 행 Select 성공! ");
 		} catch (SQLException e) {
 			System.out.println("DBMS 연결 실패" + e.getMessage());
@@ -120,6 +157,7 @@ public class BoardDAOImpl implements BoardDAO {
 		} finally {
 			DBUtil.close(rs, ptmt, con);
 		}
+		return boardlist;
 	}
 	
 	public int Insert(String id, String title, String content) {
@@ -144,5 +182,6 @@ public class BoardDAOImpl implements BoardDAO {
 		}
 		return result;
 	}
+
 	
 }

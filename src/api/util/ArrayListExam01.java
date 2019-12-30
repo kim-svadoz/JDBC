@@ -2,7 +2,7 @@ package api.util;
 
 import java.util.ArrayList;
 
-public class ArrayListExsam01 {
+public class ArrayListExam01 {
 	public static void main(String[] args) {
 		//79,55,100,98,99를 ArrayList에 담고 총점과 평균을 출력하세요
 		//[출력형태]
