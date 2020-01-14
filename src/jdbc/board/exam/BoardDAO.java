@@ -11,7 +11,7 @@ public interface BoardDAO {
 	ArrayList<BoardDTO> findByTitle(String title); // 게시글 검색 - L // 이런단어가 들어가있는지 검색
 	BoardDTO read(int boardnum); // 게시글 조회 -R //PK에서 검색
 }
-/*
+/* CLRUD
 U - Update
 D - Delete
 L - List => DTO가 담겨있는 ArrayList
